@@ -92,7 +92,7 @@ svg.transition()
     })
 // was fast so adding a delay for the growing
     .delay(function(d, i) {
-        return i * 20;
+        return i * 15;                              // quicken speed of each rect element
     })
     .duration(500)                                  // adds delay
     .ease('elastic')                                // nice bouncy effect, too long pulls back to short, and vica versa
