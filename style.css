@@ -9,7 +9,8 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue", Helvetica;
   font-weight: 700;
   // color: aqua;
-  color: red;
+  // color: red;
+  color: white;
   font-size: 2em;
   margin-bottom: .5em;
   text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);

@@ -5,10 +5,12 @@ var backgroundHeight = 400,
     barWidth = 20,
     barSpacing = 10;
 
-// change color of chart bars by number passed in data_ary, ie the larger the height the more red
+// change color of chart bars depending on horizontal position
 var colors = d3.scale.linear()
-    .domain([0, d3.max(data_ary)])
-    .range(['pink', 'red'])
+    .domain([0, data_ary.length*.33, data_ary.length*.66, data_ary.length])
+    .range(['yellow', 'orange', 'red', 'purple'])
+    // .domain([0, d3.max(data_ary)]) // if by height
+    // .range(['aqua', 'red'])        // if hard coded
 
 // linear scaling y
 // to make sure all data fits into the chart as the array grows in the y direction
@@ -31,8 +33,11 @@ var svg = d3.select('#bar_graph')                  // targeting an id
         .data(data_ary)                            // coming from selectAll rect, data will be the y axis
         .enter()                                   // switch to yet-to-be-added elements selection
     .append('rect')                                // ~ bars, as we go through the data_ary we append a rect
-        // .style('fill', 'aqua')                     // style the rect color
-        .style('fill', colors)                     // change color of chart bars by number passed in data_ary, ie the larger the height the more red
+        // .style('fill', 'aqua')                     // if hard coded, style the rect color
+        // .style('fill', colors)                     // if by height
+        .style('fill', function(d,i) {             // if by
+            return colors(i);
+        })
         .attr('width', xScale.rangeBand())         // now scales
         .attr('height', function(d) {              // d ~ data, sets the height to the current data
             return yScale(d);                      // currently all on top of each other, y scaled to a max value
