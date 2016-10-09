@@ -8,8 +8,6 @@ var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
 
 // each refresh gives new values
 for (var i=0; i < randomnumber; i++) { 
-    // data_ary.push(Math.random()) 
-    // data_ary.push(Math.round(Math.random())) // whole numbers, will not work bc goes off screen in y direction
     data_ary.push(Math.round(Math.random()*randomnumber)) // random whole numbers, within given range
 }
 
@@ -39,6 +37,11 @@ var xScale = d3.scale.ordinal()
     .domain(d3.range(0, data_ary.length))          // generate an array 0-array length
     .rangeBands([0, backgroundWidth])              // map values
 
+// sort data in assending order
+data_ary.sort(function compareNumbers(a,b) {
+    return a - b;
+});
+
 // showDataValue of rect on mouseover: part 1
 var showDataValue = d3.select('body').append('div')
         .style('font-weight', 'bold')
@@ -46,8 +49,6 @@ var showDataValue = d3.select('body').append('div')
         .style('position', 'absolute')             // touching <rect> 
         .style('padding', '2px')
         .style('background', 'rgba(255,255,255,0.6)')     // whitish background with 60% opacity
-        // .style('background', 'rgba(192,192,192,0.3)')  // greyish background with 30% opacity
-        // .style('background', 'rgba(76, 175, 80, 0.3)') // greenish background with 30% opacity
 
 var svg = d3.select('#bar_graph')                  // targeting an id
     .append('svg')                                 // create svg tag
@@ -74,21 +75,21 @@ var svg = d3.select('#bar_graph')                  // targeting an id
             .style('opacity', .3)
             .style('fill', setTempColor)            // add a color, if desired
     })
-    .on('mouseout', function(d) {                   // similarly
+    .on('mouseout', function(d) {
         d3.select(this)
             .style('opacity', 1)
             .style('fill', unsetTempColor)          // add a color, if desired
         // showDataValue of rect on mouseover: part 1
         showDataValue.transition()
             .style('opacity', .9)
+        showDataValue.html(d)
+                .style('left', (d3.event.pageX - 1) + 'px')
+                .style('top',  (d3.event.pageY - 25) + 'px')
         // position the showDataValue on the x axis ~ below the <rect> element
         // showDataValue.html(d)
             // .style('left', (d3.event.pageX) + 'px')
         // position the showDataValue on the x,y axis of the <rect> element
         // offset by a few px to minimize cursor covering value as it appears
-        showDataValue.html(d)
-                .style('left', (d3.event.pageX - 1) + 'px')
-                .style('top',  (d3.event.pageY - 25) + 'px')
     })
 
 // grow animate the chart height for each rect: part 2
@@ -99,7 +100,7 @@ svg.transition()
     .attr('y', function(d) {
         return backgroundHeight - yScale(d);
     })
-// was fast so adding a delay for the growing
+// was fast so adding a delay for the growing animation effect
     .delay(function(d, i) {
         return i * 15;                              // quicken speed of each rect element
     })
