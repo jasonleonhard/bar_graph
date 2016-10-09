@@ -1,4 +1,14 @@
-var data_ary = [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
+// create an array data values within a given range a random number of times
+var data_ary = [];  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
+var minimum = 10   // 1  // 10  // 100
+var maximum = 1000 // 10 // 100 // 1000 // 10000 // 100000
+// Generating random whole numbers in JavaScript in a specific range
+var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+// console.log(randomnumber)
+
+// each refresh gives new values
+for (var i=0; i < randomnumber; i++) { data_ary.push(Math.random()) }
+// for (var i=0; i < 100; i++) { data_ary.push(Math.random()) }
 
 var backgroundHeight = 400,
     backgroundWidth = 600,
@@ -7,7 +17,8 @@ var backgroundHeight = 400,
 
 // change color of chart bars depending on horizontal position
 var colors = d3.scale.linear()
-    .domain([0, data_ary.length*.33, data_ary.length*.66, data_ary.length])
+    // .domain([0, data_ary.length*.33, data_ary.length*.66, data_ary.length])
+    .domain([0, data_ary.length*(1/3), data_ary.length*(2/3), data_ary.length])
     .range(['yellow', 'orange', 'red', 'purple'])
     // .domain([0, d3.max(data_ary)]) // if by height
     // .range(['aqua', 'red'])        // if hard coded
