@@ -5,13 +5,19 @@ var backgroundHeight = 400,
     barWidth = 20,
     barSpacing = 10;
 
+// change color of chart bars by number passed in data_ary, ie the larger the height the more red
+var colors = d3.scale.linear()
+    .domain([0, d3.max(data_ary)])
+    .range(['pink', 'red'])
+
+// linear scaling y
 // to make sure all data fits into the chart as the array grows in the y direction
 // current implimentation gives up spacing bars in favor of dynamic sizing to fit chart width
 var yScale = d3.scale.linear()
     .domain([0, d3.max(data_ary)])
     .range([0, backgroundHeight])
 
-// ordinal scale deals with width fitting
+// ordinal scaling x deals with width fitting
 var xScale = d3.scale.ordinal()
     .domain(d3.range(0, data_ary.length))          // generate an array 0-array length
     .rangeBands([0, backgroundWidth])              // map values
@@ -25,20 +31,17 @@ var svg = d3.select('#bar_graph')                  // targeting an id
         .data(data_ary)                            // coming from selectAll rect, data will be the y axis
         .enter()                                   // switch to yet-to-be-added elements selection
     .append('rect')                                // ~ bars, as we go through the data_ary we append a rect
-        .style('fill', 'aqua')                     // style the rect color
-        // .attr('width', barWidth)                   // bars width
+        // .style('fill', 'aqua')                     // style the rect color
+        .style('fill', colors)                     // change color of chart bars by number passed in data_ary, ie the larger the height the more red
         .attr('width', xScale.rangeBand())         // now scales
         .attr('height', function(d) {              // d ~ data, sets the height to the current data
-            // return d;                           // currently all on top of each other
             return yScale(d);                      // currently all on top of each other, y scaled to a max value
         })
         .attr('x', function(d, i) {                // barSpacing x of barWidth, using data_ary index
-            // return i * (barWidth + barSpacing);    // each x (width + spacing) * total index to fit in x axis
             return xScale(i) ;
             // return i * (barWidth + barSpacing);    // each x (width + spacing) * total index to fit in x axis
         })
         .attr('y', function(d) {                   // barSpacing y of barWidth
-            // return backgroundHeight - d;        // begining height starts at the bottom
             return backgroundHeight - yScale(d);   // begining height starts at the bottom
         })
 
