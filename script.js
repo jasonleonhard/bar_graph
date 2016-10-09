@@ -1,8 +1,8 @@
 // create an array data values within a given range a random number of times
-var data_ary = [];  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
-// console.log(data_ary.length)
-var minimum = 10   // 1  // 10  // 100
-var maximum = 100 // 10 // 100 // 1000 // 10000 // 100000
+var data_ary = [],  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
+    minimum = 10,   // 1  // 10  // 100
+    maximum = 100;  // 10 // 100 // 1000 // 10000 // 100000
+
 // Generating random whole numbers in JavaScript in a specific range
 var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
@@ -42,23 +42,24 @@ data_ary.sort(function sortAssendingOrder(a,b) {
 });
 
 // showDataValue of rect on mouseover: part 1
-var showDataValue = d3.select('body').append('div')
+var showDataValue = d3.select('body')
+    .append('div')
         .style('font-weight', 'bold')
         .style('font-size', '20px')
-        .style('position', 'absolute')             // touching <rect> 
         .style('padding', '2px')
-        .style('background', 'rgba(255,255,255,0.6)')     // whitish background with 60% opacity
+        .style('position', 'absolute')                 // touching <rect>
+        .style('background', 'rgba(255,255,255,0.6)')  // whitish background with 60% opacity
 
 var svg = d3.select('#bar_graph')                  // targeting an id
-    .append('svg')                                 // create svg tag
+    .append('svg')                                 // create <svg> tag
         .style('background', backgroundColor)      // style background color
         .attr('height', backgroundHeight)          // set background height
         .attr('width', backgroundWidth)            // set background width
         .selectAll('rect')                         // svg <rect> are the bars in the graph
         .data(data_ary)                            // coming from selectAll rect, data will be the y axis
         .enter()                                   // switch to yet-to-be-added elements selection
-    .append('rect')                                // ~ bars, as we go through the data_ary we append a rect
-        .style('fill', function(d,i) {             // if by
+    .append('rect')                                // <rect> ~ bars, as we go through the data_ary we append a rect
+        .style('fill', function(d,i) {             // fill <rect> with color array colors
             return colors(i);
         })
         .attr('width', xScale.rangeBand())         // now scales
