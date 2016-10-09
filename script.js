@@ -7,14 +7,20 @@ var maximum = 100 // 10 // 100 // 1000 // 10000 // 100000
 var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
 // each refresh gives new values
-for (var i=0; i < randomnumber; i++) { data_ary.push(Math.random()) }
+for (var i=0; i < randomnumber; i++) { 
+    // data_ary.push(Math.random()) 
+    // data_ary.push(Math.round(Math.random())) // whole numbers, will not work bc goes off screen in y direction
+    data_ary.push(Math.round(Math.random()*randomnumber)) // random whole numbers, within given range
+}
 
 var backgroundHeight = 400,
     backgroundWidth = 600,
     barWidth = 20,
     barSpacing = 10,
-    setTempColor = '#f6f';
-    unsetTempColor = null;
+    setTempColor = '#f6f';                     // pinkish
+    unsetTempColor = null,                     // none
+    backgroundColor = 'rgba(192,192,192,0.3)'; // greyish background with 60% opacity
+    // backgroundColor = '#eee';               // greyish
 
 // change color of chart bars depending on horizontal position
 var colors = d3.scale.linear()
@@ -33,9 +39,19 @@ var xScale = d3.scale.ordinal()
     .domain(d3.range(0, data_ary.length))          // generate an array 0-array length
     .rangeBands([0, backgroundWidth])              // map values
 
+// showDataValue of rect on mouseover: part 1
+var showDataValue = d3.select('body').append('div')
+        .style('font-weight', 'bold')
+        .style('font-size', '20px')
+        .style('position', 'absolute')             // touching <rect> 
+        .style('padding', '2px')
+        .style('background', 'rgba(255,255,255,0.6)')     // whitish background with 60% opacity
+        // .style('background', 'rgba(192,192,192,0.3)')  // greyish background with 30% opacity
+        // .style('background', 'rgba(76, 175, 80, 0.3)') // greenish background with 30% opacity
+
 var svg = d3.select('#bar_graph')                  // targeting an id
     .append('svg')                                 // create svg tag
-        .style('background', '#eee')               // style background color
+        .style('background', backgroundColor)      // style background color
         .attr('height', backgroundHeight)          // set background height
         .attr('width', backgroundWidth)            // set background width
         .selectAll('rect')                         // svg <rect> are the bars in the graph
@@ -46,40 +62,33 @@ var svg = d3.select('#bar_graph')                  // targeting an id
             return colors(i);
         })
         .attr('width', xScale.rangeBand())         // now scales
-    // grow animate the chart height for each rect: part 1
-        // .attr('height', function(d) {              // d ~ data, sets the height to the current data
-        //     return yScale(d);                      // currently all on top of each other, y scaled to a max value
-        // })
-        // .attr('x', function(d, i) {                // barSpacing x of barWidth, using data_ary index
-        //     return xScale(i) ;
-        // })
-        // .attr('y', function(d) {                   // barSpacing y of barWidth
-        //     return backgroundHeight - yScale(d);   // begining height starts at the bottom
-        // })
-    // replacing with the following
         .attr('x', function(d,i) {
             return xScale(i);
         })
         .attr('height', 0)
         .attr('y', backgroundHeight)
-
     // events (like mouseover, mouseout, onhover...) now implimented
     .on('mouseover', function(d) {
         unsetTempColor = this.style.fill;
         d3.select(this)
-            // .transition()
-            // .transition().duration(100)            // defaults to 2500ms
-            // .transition().delay(10).duration(100)     // defaults to 2500ms, or use delay(10)
             .style('opacity', .3)
             .style('fill', setTempColor)            // add a color, if desired
     })
     .on('mouseout', function(d) {                   // similarly
         d3.select(this)
-            // .transition()                        // defaults to 2500ms, or use delay(10)
-            // .transition().duration(100)
-            // .transition().delay(40).duration(100)
             .style('opacity', 1)
             .style('fill', unsetTempColor)          // add a color, if desired
+        // showDataValue of rect on mouseover: part 1
+        showDataValue.transition()
+            .style('opacity', .9)
+        // position the showDataValue on the x axis ~ below the <rect> element
+        // showDataValue.html(d)
+            // .style('left', (d3.event.pageX) + 'px')
+        // position the showDataValue on the x,y axis of the <rect> element
+        // offset by a few px to minimize cursor covering value as it appears
+        showDataValue.html(d)
+                .style('left', (d3.event.pageX - 1) + 'px')
+                .style('top',  (d3.event.pageY - 25) + 'px')
     })
 
 // grow animate the chart height for each rect: part 2
