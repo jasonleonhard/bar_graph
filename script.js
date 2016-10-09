@@ -5,6 +5,11 @@ var backgroundHeight = 400,
     barWidth = 20,
     barSpacing = 10;
 
+// to make sure all data fits into the chart as the array grows in the y direction
+var yScale = d3.scale.linear()
+    .domain([0, d3.max(data_ary)])
+    .range([0, backgroundHeight])
+
 var svg = d3.select('#bar_graph')                  // targeting an id
     .append('svg')                                 // create svg tag
         .style('background', '#eee')               // style background color
@@ -17,38 +22,13 @@ var svg = d3.select('#bar_graph')                  // targeting an id
         .style('fill', 'aqua')                     // style the rect color
         .attr('width', barWidth)                   // bars width
         .attr('height', function(d) {              // d ~ data, sets the height to the current data
-            return d;                              // currently all on top of each other
+            // return d;                           // currently all on top of each other
+            return yScale(d);                      // currently all on top of each other, y scaled to a max value
         })
         .attr('x', function(d, i) {                // barSpacing x of barWidth, using data_ary index
             return i * (barWidth + barSpacing);    // each x (width + spacing) * total index to fit in x axis
         })
         .attr('y', function(d) {                   // barSpacing y of barWidth
-            return backgroundHeight - d;           // begining height starts at the bottom
+            // return backgroundHeight - d;        // begining height starts at the bottom
+            return backgroundHeight - yScale(d);   // begining height starts at the bottom
         })
-
-// Circle with Drop Shadow
-var w = 600, h = 600;
-var svg = d3.select("#circle_with_drop_shadow")
-  .append("svg")
-    .attr("width", w)
-    .attr("height", h)
-var defs = svg.append("defs");
-// black drop shadow
-var filter = defs.append("filter")
-    .attr("id", "drop-shadow")
-filter.append("feGaussianBlur")
-    .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 2)
-filter.append("feOffset")
-    .attr("dx", 4) // x offset
-    .attr("dy", 4) // y offset
-var feMerge = filter.append("feMerge");
-feMerge.append("feMergeNode")
-feMerge.append("feMergeNode")
-    .attr("in", "SourceGraphic");
-svg.append("circle")
-    .attr("r", 50)   // radius
-    .attr("cx", 300) // x
-    .attr("cy", 300) // y
-    .style("filter", "url(#drop-shadow)")
-    .style("fill", "aqua")
