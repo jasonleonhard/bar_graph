@@ -5,22 +5,26 @@ var backgroundHeight = 400,
     barWidth = 20,
     barSpacing = 10;
 
-var svg = d3.select('#bar_graph')
-    .append('svg')
-        .style('background', '#eee')
-        .attr('height', backgroundHeight)
-        .attr('width', backgroundWidth)
-        .selectAll('rect')
-        .data(data_ary)
-        .enter()
-    .append('rect')
-        .style('fill', 'aqua')
-        .attr('width', barWidth)
-        .attr('height', function(d) { return d; })
-        .attr('x', function(d, i) {
-            return i * (barWidth + barSpacing);
+var svg = d3.select('#bar_graph')                  // targeting an id
+    .append('svg')                                 // create svg tag
+        .style('background', '#eee')               // style background color
+        .attr('height', backgroundHeight)          // set background height
+        .attr('width', backgroundWidth)            // set background width
+        .selectAll('rect')                         // svg <rect> are the bars in the graph
+        .data(data_ary)                            // coming from selectAll rect, data will be the y axis
+        .enter()                                   // switch to yet-to-be-added elements selection
+    .append('rect')                                // ~ bars, as we go through the data_ary we append a rect
+        .style('fill', 'aqua')                     // style the rect color
+        .attr('width', barWidth)                   // bars width
+        .attr('height', function(d) {              // d ~ data, sets the height to the current data
+            return d;                              // currently all on top of each other
         })
-        .attr('y', function(d) { return backgroundHeight - d; })
+        .attr('x', function(d, i) {                // barSpacing x of barWidth, using data_ary index
+            return i * (barWidth + barSpacing);    // each x (width + spacing) * total index to fit in x axis
+        })
+        .attr('y', function(d) {                   // barSpacing y of barWidth
+            return backgroundHeight - d;           // begining height starts at the bottom
+        })
 
 // Circle with Drop Shadow
 var w = 600, h = 600;
