@@ -23,18 +23,20 @@ var svg = d3.select('#bar_graph')
         .attr('y', function(d) { return backgroundHeight - d; })
 
 // Circle with Drop Shadow
-var w = 600, h = 600;
+var w = 600, h = 400;
 var svg = d3.select("#circle_with_drop_shadow")
   .append("svg")
     .attr("width", w)
     .attr("height", h)
+    .style('background', '#eee')
 var defs = svg.append("defs");
 // black drop shadow
 var filter = defs.append("filter")
     .attr("id", "drop-shadow")
 filter.append("feGaussianBlur")
     .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 2)
+    // .attr("stdDeviation", 2)
+    .attr("stdDeviation", 4)
 filter.append("feOffset")
     .attr("dx", 4) // x offset
     .attr("dy", 4) // y offset
