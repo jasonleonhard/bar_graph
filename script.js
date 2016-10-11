@@ -1,8 +1,8 @@
 // create an array data values within a given range a random number of times
-var data_ary = [];  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
-// console.log(data_ary.length)
-var minimum = 10   // 1  // 10  // 100
-var maximum = 100 // 10 // 100 // 1000 // 10000 // 100000
+var data_ary = [],  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
+    minimum = 10,   // 1  // 10  // 100
+    maximum = 100;  // 10 // 100 // 1000 // 10000 // 100000
+
 // Generating random whole numbers in JavaScript in a specific range
 var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
@@ -18,7 +18,6 @@ var backgroundHeight = 400,
     setTempColor = '#f6f';                     // pinkish
     unsetTempColor = null,                     // none
     backgroundColor = 'rgba(192,192,192,0.3)'; // greyish background with 60% opacity
-    // backgroundColor = '#eee';               // greyish
 
 // change color of chart bars depending on horizontal position
 var colors = d3.scale.linear()
@@ -37,29 +36,30 @@ var xScale = d3.scale.ordinal()
     .domain(d3.range(0, data_ary.length))          // generate an array 0-array length
     .rangeBands([0, backgroundWidth])              // map values
 
-// sort data in assending order
-data_ary.sort(function compareNumbers(a,b) {
+// sort data in assending order by comparison
+data_ary.sort(function sortAssendingOrder(a,b) {
     return a - b;
 });
 
 // showDataValue of rect on mouseover: part 1
-var showDataValue = d3.select('body').append('div')
+var showDataValue = d3.select('body')
+    .append('div')
         .style('font-weight', 'bold')
         .style('font-size', '20px')
-        .style('position', 'absolute')             // touching <rect>
         .style('padding', '2px')
-        .style('background', 'rgba(255,255,255,0.6)')     // whitish background with 60% opacity
+        .style('position', 'absolute')                 // touching <rect>
+        .style('background', 'rgba(255,255,255,0.6)')  // whitish background with 60% opacity
 
 var svg = d3.select('#bar_graph')                  // targeting an id
-    .append('svg')                                 // create svg tag
+    .append('svg')                                 // create <svg> tag
         .style('background', backgroundColor)      // style background color
         .attr('height', backgroundHeight)          // set background height
         .attr('width', backgroundWidth)            // set background width
         .selectAll('rect')                         // svg <rect> are the bars in the graph
         .data(data_ary)                            // coming from selectAll rect, data will be the y axis
         .enter()                                   // switch to yet-to-be-added elements selection
-    .append('rect')                                // ~ bars, as we go through the data_ary we append a rect
-        .style('fill', function(d,i) {             // if by
+    .append('rect')                                // <rect> ~ bars, as we go through the data_ary we append a rect
+        .style('fill', function(d,i) {             // fill <rect> with color array colors
             return colors(i);
         })
         .attr('width', xScale.rangeBand())         // now scales
@@ -106,56 +106,3 @@ svg.transition()
     })
     .duration(500)                                  // adds delay
     .ease('elastic')                                // nice bouncy effect, too long pulls back to short, and vica versa
-
-
-
-// WORKS !!!
-svg.transition()
-    .attr('height', function(d) {
-        return yScale(d);
-    })
-    .attr('y', function(d) {
-        return backgroundHeight - yScale(d);
-    })
-    .delay(function(d, i) {
-        return i * 20;
-    })
-    .duration(1000)
-    .ease('elastic')
-
-var rulerScaleY = d3.scale.linear()
-    .domain([0, d3.max(dataAry)])
-    .range([backgroundHeight, 0])
-
-var rulerAxisY = d3.svg.axis()
-    .scale(rulerScaleY)
-    .orient('left')
-    .ticks(10)
-
-var vGuide = d3.select('svg')
-    .append('g')
-        rulerAxisY(vGuide)
-        vGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        vGuide.selectAll('path')
-            .style({ fill: 'none', stroke: "#000"})
-        vGuide.selectAll('line')
-            .style({ stroke: "#000"})
-
-var hAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient('bottom')
-    .tickValues(xScale.domain().filter(function(d, i) {
-        // rounding required to allow y axis to compute correct scale
-        return !(i % Math.round(dataAry.length/10));
-        console.log(Math.round(dataAry.length/10))
-    }))
-
-var rulerGuideY = d3.select('svg')
-    .append('g')
-        hAxis(rulerGuideY)
-        rulerGuideY.attr('transform', 'translate(' + margin.left + ', ' + (backgroundHeight + margin.top) + ')')
-        rulerGuideY.selectAll('path')
-            .style({ fill: 'none', stroke: "#000"})
-        rulerGuideY.selectAll('line')
-            .style({ stroke: "#000"})
-
