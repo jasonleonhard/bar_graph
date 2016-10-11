@@ -29,7 +29,10 @@
 
 # Enjoyed this project? Why not give us a star!?!?
 
-[![N|star](images/star.png)](https://github.com/jasonleonhard/bar_graph/star)
-[![N|watch](images/watch.png)](https://github.com/jasonleonhard/bar_graph/subscription)
-[![N|fork](images/fork.png)](https://github.com/jasonleonhard/bar_graph/fork)
-[![N|follow](images/follow.png)](https://github.com/users/follow?target=jasonleonhard)
+<!-- just links to top of page where you can star, fork, watch -->
+[![N|star](images/star.png)](#top)
+[![N|fork](images/fork.png)](#top)
+[![N|watch](images/watch.png)](#top)
+
+<!-- just links to page where you can follow -->
+[![N|follow](images/follow.png)](https://github.com/jasonleonhard)
