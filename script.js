@@ -7,7 +7,7 @@ var data_ary = [],  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 4
 var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
 // each refresh gives new values
-for (var i=0; i < randomnumber; i++) { 
+for (var i=0; i < randomnumber; i++) {
     data_ary.push(Math.round(Math.random()*randomnumber)) // random whole numbers, within given range
 }
 
