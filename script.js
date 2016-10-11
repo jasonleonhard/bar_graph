@@ -7,7 +7,7 @@ var maximum = 100 // 10 // 100 // 1000 // 10000 // 100000
 var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
 // each refresh gives new values
-for (var i=0; i < randomnumber; i++) { 
+for (var i=0; i < randomnumber; i++) {
     data_ary.push(Math.round(Math.random()*randomnumber)) // random whole numbers, within given range
 }
 
@@ -46,7 +46,7 @@ data_ary.sort(function compareNumbers(a,b) {
 var showDataValue = d3.select('body').append('div')
         .style('font-weight', 'bold')
         .style('font-size', '20px')
-        .style('position', 'absolute')             // touching <rect> 
+        .style('position', 'absolute')             // touching <rect>
         .style('padding', '2px')
         .style('background', 'rgba(255,255,255,0.6)')     // whitish background with 60% opacity
 
@@ -106,3 +106,56 @@ svg.transition()
     })
     .duration(500)                                  // adds delay
     .ease('elastic')                                // nice bouncy effect, too long pulls back to short, and vica versa
+
+
+
+// WORKS !!!
+svg.transition()
+    .attr('height', function(d) {
+        return yScale(d);
+    })
+    .attr('y', function(d) {
+        return backgroundHeight - yScale(d);
+    })
+    .delay(function(d, i) {
+        return i * 20;
+    })
+    .duration(1000)
+    .ease('elastic')
+
+var rulerScaleY = d3.scale.linear()
+    .domain([0, d3.max(dataAry)])
+    .range([backgroundHeight, 0])
+
+var rulerAxisY = d3.svg.axis()
+    .scale(rulerScaleY)
+    .orient('left')
+    .ticks(10)
+
+var vGuide = d3.select('svg')
+    .append('g')
+        rulerAxisY(vGuide)
+        vGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        vGuide.selectAll('path')
+            .style({ fill: 'none', stroke: "#000"})
+        vGuide.selectAll('line')
+            .style({ stroke: "#000"})
+
+var hAxis = d3.svg.axis()
+    .scale(xScale)
+    .orient('bottom')
+    .tickValues(xScale.domain().filter(function(d, i) {
+        // rounding required to allow y axis to compute correct scale
+        return !(i % Math.round(dataAry.length/10));
+        console.log(Math.round(dataAry.length/10))
+    }))
+
+var rulerGuideY = d3.select('svg')
+    .append('g')
+        hAxis(rulerGuideY)
+        rulerGuideY.attr('transform', 'translate(' + margin.left + ', ' + (backgroundHeight + margin.top) + ')')
+        rulerGuideY.selectAll('path')
+            .style({ fill: 'none', stroke: "#000"})
+        rulerGuideY.selectAll('line')
+            .style({ stroke: "#000"})
+
