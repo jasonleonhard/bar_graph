@@ -52,7 +52,7 @@ dataAry.sort(function sortAssendingOrder(a,b) {
 });
 
 // sort data in assending order by comparison
-data_ary.sort(function sortAssendingOrder(a,b) {
+dataAry.sort(function sortAssendingOrder(a,b) {
     return a - b;
 });
 
