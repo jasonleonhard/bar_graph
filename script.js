@@ -24,7 +24,7 @@ var margin = { top: 30, right: 30, bottom: 40, left:50 }
 var backgroundHeight = 400 - margin.top - margin.bottom,
     backgroundWidth = 600 - margin.left - margin.right,
     barWidth = 20,
-    barSpacing = 10,
+    barSpacing = 0.15,
     setTempColor = '#f6f';                     // pinkish
     unsetTempColor = null,                     // none
     backgroundColor = 'rgba(192,192,192,0.3)'; // greyish background with 60% opacity
@@ -44,7 +44,7 @@ var yScale = d3.scale.linear()
 // ordinal scaling x deals with width fitting
 var xScale = d3.scale.ordinal()
     .domain(d3.range(0, dataAry.length))          // generate an array 0-array length
-    .rangeBands([0, backgroundWidth])              // map values
+    .rangeBands([0, backgroundWidth], barSpacing)              // map values
 
 // sort data in assending order by comparison
 dataAry.sort(function sortAssendingOrder(a,b) {
@@ -119,37 +119,36 @@ svg.transition()
         return i * 15;                              // quicken speed of each rect element
     })
     .duration(500)                                  // adds delay
-    .ease('elastic')                                // nice bouncy effect, too long pulls back to short, and vica versa
+    .ease('elastic')  // nice bouncy effect, too long pulls back to short, and vica versa
 
-
-var vGuideScale = d3.scale.linear()
+var xGuideScale = d3.scale.linear()
     .domain([0, d3.max(dataAry)])
     .range([backgroundHeight, 0])
 
-var vAxis = d3.svg.axis()
-    .scale(vGuideScale)
+var xAxis = d3.svg.axis()
+    .scale(xGuideScale)
     .orient('left')
     .ticks(10)
 
-var vGuide = d3.select('svg').append('g')
-    vAxis(vGuide)
-    vGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-    vGuide.selectAll('path')
+var xGuide = d3.select('svg').append('g')
+    xAxis(xGuide)
+    xGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+    xGuide.selectAll('path')
         .style({ fill: 'none', stroke: "#000"})
-    vGuide.selectAll('line')
+    xGuide.selectAll('line')
         .style({ stroke: "#000"})
 
-var hAxis = d3.svg.axis()
+var yAxis = d3.svg.axis()
     .scale(xScale)
     .orient('bottom')
     .tickValues(xScale.domain().filter(function(d, i) {
         return !(i % (dataAry.length/5));
     }))
 
-var hGuide = d3.select('svg').append('g')
-    hAxis(hGuide)
-    hGuide.attr('transform', 'translate(' + margin.left + ', ' + (backgroundHeight + margin.top) + ')')
-    hGuide.selectAll('path')
+var yGuide = d3.select('svg').append('g')
+    yAxis(yGuide)
+    yGuide.attr('transform', 'translate(' + margin.left + ', ' + (backgroundHeight + margin.top) + ')')
+    yGuide.selectAll('path')
         .style({ fill: 'none', stroke: "#000"})
-    hGuide.selectAll('line')
-        .style({ stroke: "#000"})
+    yGuide.selectAll('line')
+        // .style({ stroke: "#000"})
