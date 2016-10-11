@@ -1,5 +1,5 @@
 // create an array data values within a given range a random number of times
-var data_ary = [],  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
+var dataAry = [],  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
     minimum = 10,   // 1  // 10  // 100
     maximum = 100;  // 10 // 100 // 1000 // 10000 // 100000
 
@@ -7,9 +7,13 @@ var data_ary = [],  // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 4
 var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
 // each refresh gives new values
-for (var i=0; i < randomnumber; i++) {
-    data_ary.push(Math.round(Math.random()*randomnumber)) // random whole numbers, within given range
+for (var i=0; i < maximum; i++) {
+    dataAry.push(Math.round(Math.random()*maximum)+minimum) // random whole numbers, within given range
 }
+
+// var margin = { top: -20, right: 30, bottom: 20, left:50 }
+var margin = { top: -30, right: 0, bottom: 0, left:30 }
+
 
 var backgroundHeight = 400,
     backgroundWidth = 600,
@@ -21,23 +25,23 @@ var backgroundHeight = 400,
 
 // change color of chart bars depending on horizontal position
 var colors = d3.scale.linear()
-    .domain([0, data_ary.length*(1/3), data_ary.length*(2/3), data_ary.length])
+    .domain([0, dataAry.length*(1/3), dataAry.length*(2/3), dataAry.length])
     .range(['yellow', 'orange', 'red', 'purple'])
 
 // linear scaling y
 // to make sure all data fits into the chart as the array grows in the y direction
 // current implimentation gives up spacing bars in favor of dynamic sizing to fit chart width
 var yScale = d3.scale.linear()
-    .domain([0, d3.max(data_ary)])
+    .domain([0, d3.max(dataAry)])
     .range([0, backgroundHeight])
 
 // ordinal scaling x deals with width fitting
 var xScale = d3.scale.ordinal()
-    .domain(d3.range(0, data_ary.length))          // generate an array 0-array length
+    .domain(d3.range(0, dataAry.length))          // generate an array 0-array length
     .rangeBands([0, backgroundWidth])              // map values
 
 // sort data in assending order by comparison
-data_ary.sort(function sortAssendingOrder(a,b) {
+dataAry.sort(function sortAssendingOrder(a,b) {
     return a - b;
 });
 
@@ -56,9 +60,9 @@ var svg = d3.select('#bar_graph')                  // targeting an id
         .attr('height', backgroundHeight)          // set background height
         .attr('width', backgroundWidth)            // set background width
         .selectAll('rect')                         // svg <rect> are the bars in the graph
-        .data(data_ary)                            // coming from selectAll rect, data will be the y axis
+        .data(dataAry)                            // coming from selectAll rect, data will be the y axis
         .enter()                                   // switch to yet-to-be-added elements selection
-    .append('rect')                                // <rect> ~ bars, as we go through the data_ary we append a rect
+    .append('rect')                                // <rect> ~ bars, as we go through the dataAry we append a rect
         .style('fill', function(d,i) {             // fill <rect> with color array colors
             return colors(i);
         })
@@ -106,3 +110,36 @@ svg.transition()
     })
     .duration(500)                                  // adds delay
     .ease('elastic')                                // nice bouncy effect, too long pulls back to short, and vica versa
+
+
+var vGuideScale = d3.scale.linear()
+    .domain([0, d3.max(dataAry)])
+    .range([backgroundHeight, 0])
+
+var vAxis = d3.svg.axis()
+    .scale(vGuideScale)
+    .orient('left')
+    .ticks(10)
+
+var vGuide = d3.select('svg').append('g')
+    vAxis(vGuide)
+    vGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+    vGuide.selectAll('path')
+        .style({ fill: 'none', stroke: "#000"})
+    vGuide.selectAll('line')
+        .style({ stroke: "#000"})
+
+var hAxis = d3.svg.axis()
+    .scale(xScale)
+    .orient('bottom')
+    .tickValues(xScale.domain().filter(function(d, i) {
+        return !(i % (dataAry.length/5));
+    }))
+
+var hGuide = d3.select('svg').append('g')
+    hAxis(hGuide)
+    hGuide.attr('transform', 'translate(' + margin.left + ', ' + (backgroundHeight + margin.top) + ')')
+    hGuide.selectAll('path')
+        .style({ fill: 'none', stroke: "#000"})
+    hGuide.selectAll('line')
+        .style({ stroke: "#000"})
