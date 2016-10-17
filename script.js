@@ -1,23 +1,33 @@
-// create an array data values within a given range a random number of times
-var dataAry = [],   // [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
-    minimum = 10,   // 1  // 10  // 100
-    maximum = 100,  // 10 // 100 // 1000 // 10000 // 100000
-// Generating random whole numbers in JavaScript in a specific range
-    randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum,
-// random number of times
-    times   = Math.floor(Math.random() * 60) + 10, // *maximum + minimum);
-// round to the nearest 10
-    rounded   = Math.round(randomnumber/ 10) * 10;
-// set times now to that rounded amount to avoid the x scale failing to appear
-    times   = rounded
-    // console.log(randomnumber)
-    // console.log(times)
+// var dataAry = [10, 70, 25, 145, 195, 23, 70, 15, 133, 80, 42, 22, 10, 46, 77, 25, 253, 32, 22, 222];
 
-// each refresh gives new values
-for (var i=0; i < times; i++) {
-    // random whole numbers, within given range
-    dataAry.push(Math.round(Math.random()*maximum)+minimum)
-}
+// create an array data values within a given range a random number of times
+// var dataAry = [];
+//     minimum = 10,   // 1  // 10  // 100
+//     maximum = 100,  // 10 // 100 // 1000 // 10000 // 100000
+// // Generating random whole numbers in JavaScript in a specific range
+//     randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum,
+// // random number of times
+//     times   = Math.floor(Math.random() * 60) + 10, // *maximum + minimum);
+// // round to the nearest 10
+//     rounded   = Math.round(randomnumber/ 10) * 10;
+// // set times now to that rounded amount to avoid the x scale failing to appear
+//     times   = rounded
+//     // console.log(randomnumber)
+//     // console.log(times)
+
+// // each refresh gives new values
+// for (var i=0; i < times; i++) {
+//     // random whole numbers, within given range
+//     dataAry.push(Math.round(Math.random()*maximum)+minimum)
+// }
+
+var dataAry = [];
+    d3.csv('data.csv', function(data) { // reading in data from data.csv
+    // d3.tsv('data.tsv', function(data) { // reading in data from data.tsv
+        console.log(data);
+        for (key in data) {
+            dataAry.push(data[key].value)
+        }
 
 var margin = { top: 30, right: 30, bottom: 40, left:50 }
 
@@ -44,17 +54,18 @@ var yScale = d3.scale.linear()
 // ordinal scaling x deals with width fitting
 var xScale = d3.scale.ordinal()
     .domain(d3.range(0, dataAry.length))          // generate an array 0-array length
-    .rangeBands([0, backgroundWidth], barSpacing)              // map values
+    .rangeBands([0, backgroundWidth], barSpacing) // map values
 
 // sort data in assending order by comparison
 dataAry.sort(function sortAssendingOrder(a,b) {
     return a - b;
 });
 
-// sort data in assending order by comparison
-dataAry.sort(function sortAssendingOrder(a,b) {
-    return a - b;
-});
+// sort data in Deassending order by comparison
+// dataAry.sort(function sortDescendingOrder(a,b) {
+//     return b - a;
+// });
+
 
 // showDataValue of rect on mouseover: part 1
 var showDataValue = d3.select('body')
@@ -157,3 +168,4 @@ var yGuide = d3.select('svg').append('g')
         .style({ fill: 'none', stroke: "#000"})
     yGuide.selectAll('line')
         // .style({ stroke: "#000"})
+});
