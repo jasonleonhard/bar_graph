@@ -22,8 +22,8 @@
 // }
 
 var dataAry = [];
-    d3.csv('data.csv', function(data) { // reading in data from data.csv
-    // d3.tsv('data.tsv', function(data) { // reading in data from data.tsv
+    // d3.csv('data.csv', function(data) { // reading in data from data.csv
+    d3.tsv('data.tsv', function(data) { // reading in data from data.tsv
         console.log(data);
         for (key in data) {
             dataAry.push(data[key].value)
