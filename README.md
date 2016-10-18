@@ -1,3 +1,5 @@
+###An example I made using d3.
+
 ## To view the project
 
 #### clone and cd into the repo
@@ -38,3 +40,5 @@
 
 <!-- just links to page where you can follow -->
 [![N|follow](images/follow.png)](https://github.com/jasonleonhard)
+
+<!-- ![bar graph](https://raw.githubusercontent.com/jasonleonhard/bar_graph/master/images/pie_graph.png) -->
